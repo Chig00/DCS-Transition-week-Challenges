@@ -1,5 +1,4 @@
 package uk.ac.warwick.dcs.chess.piece;
-
 import uk.ac.warwick.dcs.chess.*;
 import java.io.Serializable;
 
@@ -13,7 +12,7 @@ public abstract class ChessPiece implements Serializable {
 
     protected MoveStore availableMoves;
 
-    public ChessPiece(Board board, boolean isWhite, char icon, int vertical, int horizontal) {
+    public ChessPiece(Board board, boolean isWhite, char icon,int vertical, int horizontal) {
         this.board = board;
         this.isWhite = isWhite;
         this.icon = icon;
@@ -25,38 +24,23 @@ public abstract class ChessPiece implements Serializable {
     }
 
     // public char getASCII(){
-    // if(icon == )
+    //     if(icon == )
     // }
 
-    public int getHorizontal() {
-        return horizontal;
-    }
-
-    public int getVertical() {
-        return vertical;
-    }
-
-    public void setHorizontal(int h) {
-        horizontal = h;
-    }
-
-    public void setVertical(int v) {
-        vertical = v;
-    }
-
-    public boolean isWhite() {
-        return isWhite;
-    }
-
-    public char getIcon() {
-        if (Chess.getIconMode())
+    public int getHorizontal(){return horizontal;}
+    public int getVertical(){return vertical;}
+    public void setHorizontal(int h){horizontal = h;}
+    public void setVertical(int v){vertical = v;}
+    public boolean isWhite(){return isWhite;}
+    public char getIcon(){
+        if(Chess.getIconMode())
             return icon;
         else
             return ChessIcons.iconToChar(icon);
     }
 
-    public char getIcon(boolean iconMode) {
-        if (iconMode)
+    public char getIcon(boolean iconMode){
+        if(iconMode)
             return icon;
         else
             return ChessIcons.iconToChar(icon);
@@ -67,8 +51,8 @@ public abstract class ChessPiece implements Serializable {
     public Move[] getTakingMoves() {
         MoveStore m = new MoveStore();
         Move[] moves = getAvailableMoves();
-        for (int i = 0; i < moves.length; i++) {
-            if (moves[i].isTakePiece()) {
+        for(int i=0;i<moves.length;i++) {
+            if(moves[i].isTakePiece()) {
                 m.add(moves[i]);
             }
         }
@@ -79,8 +63,8 @@ public abstract class ChessPiece implements Serializable {
     public Move randomMove() {
         Move[] moves = getAvailableMoves();
 
-        if (moves.length > 0) {
-            int index = (int) (Math.random() * moves.length);
+        if(moves.length > 0) {
+            int index = (int)(Math.random() * moves.length);
             return moves[index];
         } else {
             return null;
@@ -89,55 +73,27 @@ public abstract class ChessPiece implements Serializable {
     }
 
     public Move validMove(int destinationVertical, int destinationHorizontal) {
-        for (Move move : getAvailableMoves()) {
-            if (move.getDestinationHorizontal() == destinationHorizontal
-                    && move.getDestinationVertical() == destinationVertical) {
+        for(Move move : getAvailableMoves()) {
+            if(move.getDestinationHorizontal() == destinationHorizontal && move.getDestinationVertical() == destinationVertical) {
                 return move;
             }
         }
-        return null; // We didn't find the destination as a valid move;
+        return null; //We didn't find the destination as a valid move;
     }
 
-    public String getSquare() {
-        return Character.toString((char) ('a' + horizontal)) + (8 - vertical);
+    public String getSquare(){
+        return Character.toString((char)('a' + horizontal)) + (8 -vertical);
     }
 
     @Override
     public String toString() {
         return "{" +
-        // "board=" + board +
-        // ", isWhite=" + isWhite +
+                // "board=" + board +
+                // ", isWhite=" + isWhite +
                 icon + getSquare() +
                 // ", horizontal=" + horizontal +
                 // ", vertical=" + vertical +
                 // ", availableMoves=" + availableMoves +
                 '}';
-    }
-
-    public boolean notAlreadyInLocation(int y, int x) {
-        return !(y==this.vertical&&x==this.horizontal);
-    }
-
-    public Move[] getAdjacent() {
-        MoveStore store = new MoveStore();
-        for (int xd = -1; xd <= 1; xd++) {
-            for (int yd = -1; yd <= 1; yd++) {
-                int y = this.getVertical() + yd;
-                int x = this.getHorizontal() + xd;
-                if (notAlreadyInLocation(y, x) && board.locationValid(y, x)) { // Not same place and valid
-                    if (board.pieceAtLocation(y, x) != null) { // something there
-                        if (board.pieceAtLocation(y, x).isWhite() != this.isWhite) { // take piece
-                            store.add(new Move(this, y, x, true));
-                        }
-                    }
-                    else {
-                        store.add(new Move(this, y, x, false));
-                    }
-                }
-                
-                
-            }
-        }
-        return store.movesToArray();
     }
 }
